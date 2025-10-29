@@ -1,6 +1,0 @@
-streamlit
-google-generativeai==0.8.3
-langchain-core
-pyttsx3
-SpeechRecognition
-pyaudio

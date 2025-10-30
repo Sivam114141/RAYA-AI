@@ -4,7 +4,8 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 import sqlite3, json
 from datetime import datetime
 import speech_recognition as sr
-import pyttsx3
+from gtts import gTTS
+import tempfile
 import threading
 
 # ================== CONFIG ==================
@@ -68,23 +69,17 @@ init_db()
 
 # ================== SPEECH SETUP ==================
 recognizer = sr.Recognizer()
-engine = pyttsx3.init()
-engine.setProperty("rate", 175)
-engine.setProperty("voice", engine.getProperty("voices")[1].id)
 
 import threading
 
 def speak(text):
-    def run():
-        try:
-            local_engine = pyttsx3.init()
-            local_engine.setProperty("rate", 175)
-            local_engine.setProperty("voice", local_engine.getProperty("voices")[1].id)
-            local_engine.say(text)
-            local_engine.runAndWait()
-        except Exception as e:
-            st.toast(f"Voice error: {e}", icon="⚠️")
-    threading.Thread(target=run, daemon=True).start()
+    try:
+        tts = gTTS(text)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+            tts.save(fp.name)
+            st.audio(fp.name, format="audio/mp3", autoplay=True)
+    except Exception as e:
+        st.toast(f"Speech error: {e}", icon="⚠️")
 
 
 def listen():
@@ -204,3 +199,4 @@ if user_input:
         update_conversation(st.session_state.chat_id, st.session_state.chat_history)
     else:
         save_conversation("Raya Session", st.session_state.chat_history)
+

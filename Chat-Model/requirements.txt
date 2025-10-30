@@ -1,6 +1,6 @@
-streamlit
+streamlit==1.39.0
 google-generativeai==0.8.3
-langchain-core
-SpeechRecognition
-pyaudio
-gTTS
+langchain-core==0.2.27
+SpeechRecognition==3.10.4
+gTTS==2.5.1
+pydub==0.25.1
